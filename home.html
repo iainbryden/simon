@@ -1,0 +1,127 @@
+<html>
+    <head>
+        <title></title>
+		<link rel="stylesheet" href="css/reset.css">
+        <link rel="stylesheet" href="css/base.css">
+        <link rel="stylesheet" href="bootstrap-3.3.6-dist/css/bootstrap.min.css">
+        <link rel="stylesheet" href="bootstrap-3.3.6-dist/css/bootstrap-theme.min.css">
+        <link rel="stylesheet" href="font-awesome-4.6.3/css/font-awesome.min.css">
+        <link rel="stylesheet" href="jquery-ui-1.11.4/jquery-ui.min.css">
+        <link rel="stylesheet" href="jquery-ui-1.11.4/jquery-ui.structure.min.css">
+		<link rel="stylesheet" href="css/bootstrap-solarized-dark.css">
+
+        <style>
+            [data-btn] {
+                border:5px transparent solid;
+            }
+            [data-btn='1'] {
+                background-color:orange;
+            }
+            [data-btn='2'] {
+                background-color:yellow;
+            }
+            [data-btn='3'] {
+                background-color:lightgreen;
+            }
+            [data-btn='4'] {
+                background-color:deepskyblue;
+            }
+            .light {
+                border:5px red solid;
+            }
+        </style>
+        
+        <script src="jquery-ui-1.11.4\external\jquery\jquery.js"></script>
+        <script src="bootstrap-3.3.6-dist/js/bootstrap.min.js"></script>
+        <script src="jquery-ui-1.11.4/jquery-ui.min.js"></script>
+        <script src="Snap.svg-0.4.1\dist\snap.svg-min.js"></script>
+    </head>
+    <body>
+        <div class="well">
+            <div class="row">
+                <div class="col-md-2"><i class="fa fa-anchor" aria-hidden="true"></i>&nbsp;font-awesome</div>
+                <div class="col-md-2">bootstrap <button class="button btn-primary">button</button>&nbsp;bootstrap-theme</div>
+                <div class="col-md-2">jquery:  <span class="status">not working</span></div>
+                <div class="col-md-2">jquery ui</div>
+                <div class="col-md-2">snap svg</div>
+				<div class="col-md-2">d3.js</div>
+            </div>
+        </div>
+        <div class="content text-center button-container">
+            <div class="row">
+                <button class="btn" data-btn="1">1</button>
+                <button class="btn" data-btn="2">2</button>
+                <button class="btn" data-btn="3">3</button>
+                <button class="btn" data-btn="4">4</button>
+            </div>
+        </div>
+    </body>
+</html>
+
+<script>
+$(document).ready(function(){
+    var step = 1;
+    var selections = [];
+    var seq = generateNewSequence();
+    
+    $("[data-btn]").on("mousedown", function(){
+        $(this).addClass("light");
+        var selection = $(this).attr("data-btn");
+        if (evaluateSelection(step, selection)) {
+            console.log("correct");
+            step ++;
+            playSequence(seq, step);
+        } else {
+            console.log("sorry");
+        }
+    })
+        
+    $(".button-container, [data-btn]").on("mouseup", function(){
+        $("[data-btn]").removeClass("light");
+    });
+    
+    function playOne(num) {
+        var btn = $(".button-container [data-btn='" + num + "']");
+        btn.addClass("light");
+        setTimeout(function(){
+            btn.removeClass("light");
+        }, 1000);
+    }
+    
+    function generateNewSequence() {
+        var seq = [];
+        for (i = 0; i < 8; i++) {
+            seq.push(getRandom(1,4));
+        }
+        return seq;
+    }
+    
+    function playSequence(nums, length) {
+        var timeIndex = 0;
+        var m = 0;
+        for(var n=0; n < length; n++) {
+            var num = nums[n];
+            timeIndex += 1200;
+            setTimeout(function(){
+                console.log(m, nums[m]);
+                playOne(nums[m]);
+                m++;
+            }, timeIndex)
+        }
+    }
+    
+    function getRandom(start, end) {
+        return (Math.floor(Math.random() * end) + start)
+    }
+  
+    function evaluateSelection(step, selection) {
+        var expected = seq[step-1];
+        var selected = parseInt(selection)
+        console.log("step:" + step, "expected:" + expected, "selected:" + selected, "matched:" + expected == selected)
+        return (expected == selected);
+    }
+    
+    playSequence(seq, step);
+    
+})
+</script>
