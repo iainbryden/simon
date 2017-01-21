@@ -37,6 +37,10 @@
         <script src="Snap.svg-0.4.1\dist\snap.svg-min.js"></script>
     </head>
     <body>
+        <audio id="audio-1" src="sounds/beep-01.ogg" ></audio>
+        <audio id="audio-2" src="sounds/beep-02.ogg" ></audio>
+        <audio id="audio-3" src="sounds/beep-03.ogg" ></audio>
+        <audio id="audio-4" src="sounds/beep-04.ogg" ></audio>
         <div class="well">
             <div class="row">
                 <div class="col-md-2"><i class="fa fa-anchor" aria-hidden="true"></i>&nbsp;font-awesome</div>
@@ -67,6 +71,7 @@ $(document).ready(function(){
     $("[data-btn]").on("mousedown", function(){
         $(this).addClass("light");
         var selection = $(this).attr("data-btn");
+                playSound(selection);
         if (evaluateSelection(step, selection)) {
             console.log("correct");
             step ++;
@@ -119,6 +124,13 @@ $(document).ready(function(){
         var selected = parseInt(selection)
         console.log("step:" + step, "expected:" + expected, "selected:" + selected, "matched:" + expected == selected)
         return (expected == selected);
+    }
+    
+    function playSound(selection) {
+        var id = "audio-" + selection;
+        console.log(id);
+        var audio = document.getElementById(id);
+        audio.play();
     }
     
     playSequence(seq, step);
